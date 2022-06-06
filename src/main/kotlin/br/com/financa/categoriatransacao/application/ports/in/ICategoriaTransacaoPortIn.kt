@@ -4,5 +4,5 @@ import br.com.financa.categoriatransacao.application.domains.CategoriaTransacao
 
 interface ICategoriaTransacaoPortIn {
 
-    fun consultarCategoriasTransacaoPorNome(usuario: String, nome: String): List<CategoriaTransacao>
+    fun consultarCategoriasTransacaoPorNome(usuario: String, nome: String?): List<CategoriaTransacao>
 }
