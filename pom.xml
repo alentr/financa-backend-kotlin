@@ -210,7 +210,7 @@
 							<enablePostProcessFile>false</enablePostProcessFile>
 							<output>${project.build.directory}/generated-sources</output>
 							<configOptions>
-								<dateLibrary>java11</dateLibrary>
+								<dateLibrary>java17</dateLibrary>
 								<interfaceOnly>true</interfaceOnly>
 							</configOptions>
 						</configuration>

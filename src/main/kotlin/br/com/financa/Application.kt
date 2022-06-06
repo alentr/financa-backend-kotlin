@@ -1,4 +1,4 @@
-package br.com.financa.financabackendkotlin
+package br.com.financa
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
