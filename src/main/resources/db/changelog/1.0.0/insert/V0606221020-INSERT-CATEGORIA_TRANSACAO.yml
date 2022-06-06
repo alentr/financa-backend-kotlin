@@ -1,0 +1,45 @@
+databaseChangeLog:
+  - changeSet:
+      id: INSERT-CATEGORIA_TRANSACAO
+      author: Alexandre Telles
+      changes:
+        - insert:
+            schemaName: FINANCA
+            tableName: CATEGORIA_TRANSACAO
+            columns:
+              - column:
+                  name: NOME
+                  value: 'Alimentação'
+              - column:
+                  name: USUARIO_CPF
+                  value: '84457288063'
+        - insert:
+            schemaName: FINANCA
+            tableName: CATEGORIA_TRANSACAO
+            columns:
+              - column:
+                  name: NOME
+                  value: 'Mercado'
+              - column:
+                  name: USUARIO_CPF
+                  value: '84457288063'
+        - insert:
+            schemaName: FINANCA
+            tableName: CATEGORIA_TRANSACAO
+            columns:
+              - column:
+                  name: NOME
+                  value: 'Transporte'
+              - column:
+                  name: USUARIO_CPF
+                  value: '84457288063'
+        - insert:
+            schemaName: FINANCA
+            tableName: CATEGORIA_TRANSACAO
+            columns:
+              - column:
+                  name: NOME
+                  value: 'Educação'
+              - column:
+                  name: USUARIO_CPF
+                  value: '84457288063'

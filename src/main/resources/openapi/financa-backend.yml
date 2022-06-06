@@ -1,0 +1,852 @@
+openapi: 3.0.2
+info:
+  title: financa-backend
+  version: 1.0.0
+  description: API para controle de gastos mensal
+  contact:
+    name: Alexandre Telles
+    url: 'https://www.linkedin.com/in/telles-alexandre/'
+    email: alexandre.ntr@gmail.com
+servers:
+  -
+    url: 'http://localhost:5000/financa'
+    description: localhost
+paths:
+  /gerenciamento/categoria-transacao:
+    summary: summary categoria-transacao
+    description: endpoint para incluir novas categorias de transação e buscas categorias de transação já existentes
+    get:
+      tags: []
+      parameters:
+        -
+          examples:
+            alimentação:
+              value: Alimentação
+          name: nome
+          description: |-
+            parte do nome para utilizar como filtro na busca.
+            Se não informar o nome, busca todos os registros
+          schema:
+            type: string
+          in: query
+          required: false
+      responses:
+        '200':
+          $ref: '#/components/responses/ListCategoriaTransacaoResponse'
+        '204':
+          description: retorna 204 quando não encontrar categoria da transação com os filtros selecionados
+      operationId: consultarCategoriasTransacaoPorNome
+      description: >-
+        busca categorias da transação por nome. Se não informar o nome, buscará todas as categorias da
+        transação
+    post:
+      requestBody:
+        description: dados da categoria da transação
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InputCategoriaTransacaoDTO'
+            examples:
+              nova categoria:
+                value:
+                  nome: Alimentação
+        required: true
+      responses:
+        '201':
+          $ref: '#/components/responses/CategoriaTransacaoResponse'
+      operationId: cadastrarCategoriaTransacao
+      description: cadastra uma nova categoria da transação
+    parameters:
+      -
+        examples:
+          usuario:
+            value: '84457288063'
+        name: usuario
+        description: identificado única do usuário (CPF)
+        schema:
+          type: string
+        in: header
+        required: true
+  '/gerenciamento/categoria-transacao/{id}':
+    description: endpoint para buscar/atualizar/deletar uma categoria da transação pelo id
+    get:
+      tags: []
+      responses:
+        '200':
+          $ref: '#/components/responses/CategoriaTransacaoResponse'
+        '404':
+          $ref: '#/components/responses/Erro'
+      operationId: consultarCategoriaTransacaoPorId
+      description: busca uma categoria de transação pelo id
+    delete:
+      responses:
+        '202':
+          description: retorna 202 quando deletar a categoria da transacao
+        '404':
+          $ref: '#/components/responses/Erro'
+      operationId: deletarCategoriaTransacaoPorId
+      description: deleta uma categoria da transação pelo id
+    patch:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InputCategoriaTransacaoDTO'
+            examples:
+              Atualização de categoria da transação:
+                value:
+                  nome: Alimentação
+        required: true
+      responses:
+        '202':
+          $ref: '#/components/responses/CategoriaTransacaoResponse'
+        '404':
+          $ref: '#/components/responses/Erro'
+      operationId: atualizarCategoriaTransacaoPorId
+      description: atualiza uma categoria da transação pelo id
+    parameters:
+      -
+        examples:
+          Identificador:
+            value: '1'
+        name: id
+        description: identificador único da categoria da transação
+        schema:
+          format: int64
+          type: integer
+        in: path
+        required: true
+      -
+        examples:
+          usuario:
+            value: '84457288063'
+        name: usuario
+        description: identificado única do usuário (CPF)
+        schema:
+          type: string
+        in: header
+        required: true
+  /despesa:
+    summary: summary despesa
+    description: endpoint para incluir novas despesas e buscar despesas já existentes
+    get:
+      tags: []
+      parameters:
+        -
+          examples:
+            mês e ano:
+              value: 10/2021
+          name: mes_ano
+          description: mês e ano da ocorrência da despesa
+          schema:
+            type: string
+          in: query
+          required: true
+        -
+          examples:
+            Luz:
+              value: Luz
+          name: descricao
+          description: parte da descrição da despesa
+          schema:
+            type: string
+          in: query
+        -
+          examples:
+            id da categoria da transação:
+              value: '1'
+          name: categoria_transacao_id
+          description: id da categoria de transação
+          schema:
+            format: int64
+            type: integer
+          in: query
+      responses:
+        '200':
+          $ref: '#/components/responses/ListDespesaResponse'
+        '204':
+          description: retorna 204 quando não encontrar despesas para os filtros selecionados
+      operationId: consultarDespesas
+      description: |-
+        busca as despesas com os filtros:
+        mes_ano (mês e ano da despesa) - obrigatório,
+        categoria_transacao_id (identificador único da categoria da transação) - opcional
+        descricao (parte da descrição da despesa) - opcional
+    post:
+      requestBody:
+        description: dados da despesa
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InputDespesaDTO'
+            examples:
+              nova despesa:
+                value:
+                  valor: 1135.56
+                  descricao: Mercado - Mensal
+                  categoria_transacao_id: 1
+                  ano_mes: 202109
+                  data: 08-10-2021
+                  pago: true
+        required: true
+      responses:
+        '201':
+          $ref: '#/components/responses/DespesaResponse'
+      operationId: cadastrarDespesa
+      description: cadastra uma nova despesa
+    parameters:
+      -
+        examples:
+          usuario:
+            value: '84457288063'
+        name: usuario
+        description: identificado única do usuário (CPF)
+        schema:
+          type: string
+        in: header
+        required: true
+  /receita:
+    summary: summary receita
+    description: endpoint para incluir novas receitas e buscar receitas já existentes
+    get:
+      tags: []
+      parameters:
+        -
+          examples:
+            mês e ano:
+              value: 10/2021
+          name: mes_ano
+          description: mês e ano da ocorrência da receita
+          schema:
+            type: string
+          in: query
+          required: true
+        -
+          examples:
+            salario:
+              value: Salário
+          name: descricao
+          description: parte da descrição da receita
+          schema:
+            type: string
+          in: query
+        -
+          examples:
+            id da categoria da transação:
+              value: '1'
+          name: categoria_transacao_id
+          description: id da categoria de transação
+          schema:
+            format: int64
+            type: integer
+          in: query
+      responses:
+        '200':
+          $ref: '#/components/responses/ListReceitaResponse'
+        '204':
+          description: retorna 204 quando não encontrar receitas com os filtros selecionados
+      operationId: consultarReceitas
+      description: |-
+        busca as receitas com os filtros:
+        mes_ano (mês e ano da receita) - obrigatório,
+        categoria_transacao_id (identificador único da categoria da transação) - opcional
+        descricao (parte da descrição da receita) - opcional
+    post:
+      requestBody:
+        description: dados da receita
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InputReceitaDTO'
+            examples:
+              nova receita:
+                value:
+                  valor: 15000.5
+                  descricao: Salário
+                  categoria_transacao_id: 1
+                  mes_ano: 10/2021
+                  data: 15/10/2021
+        required: true
+      responses:
+        '201':
+          $ref: '#/components/responses/ReceitaResponse'
+      operationId: cadastrarReceita
+      description: cadastra uma nova receita
+    parameters:
+      -
+        examples:
+          usuario:
+            value: '84457288063'
+        name: usuario
+        description: identificado única do usuário (CPF)
+        schema:
+          type: string
+        in: header
+        required: true
+  '/receita/{id}':
+    summary: 'summary receita/{id}'
+    description: endpoint para buscar/atualizar/deletar uma receita pelo id
+    get:
+      responses:
+        '200':
+          $ref: '#/components/responses/ReceitaResponse'
+        '404':
+          $ref: '#/components/responses/Erro'
+      operationId: consultarReceitaPorId
+      description: busca uma receita pelo id
+    delete:
+      responses:
+        '202':
+          description: retorna 202 quando deletar a receita
+        '404':
+          $ref: '#/components/responses/Erro'
+      operationId: deletarReceitaPorId
+      description: deleta uma receita pelo id
+    patch:
+      requestBody:
+        description: dados da receita
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InputReceitaDTO'
+            examples:
+              atualziar_receita:
+                value:
+                  valor: 15000.5
+                  descricao: Salário
+                  categoria_transacao_id: 1
+                  mes_ano: 10/2021
+                  data: 15/10/2021
+        required: true
+      responses:
+        '202':
+          $ref: '#/components/responses/ReceitaResponse'
+        '404':
+          $ref: '#/components/responses/Erro'
+      operationId: atualizarReceitaPorId
+      description: atualiza uma receita pelo id
+    parameters:
+      -
+        examples:
+          id da receita:
+            value: '1'
+        name: id
+        description: identificador único da receita
+        schema:
+          format: int64
+          type: integer
+        in: path
+        required: true
+      -
+        examples:
+          usuario:
+            value: '84457288063'
+        name: usuario
+        description: identificado única do usuário (CPF)
+        schema:
+          type: string
+        in: header
+        required: true
+  '/despesa/{id}':
+    summary: 'summary despesa/{id}'
+    description: endpoint para buscar/atualizar/deletar uma despesa pelo id
+    get:
+      responses:
+        '200':
+          $ref: '#/components/responses/DespesaResponse'
+        '404':
+          $ref: '#/components/responses/Erro'
+      operationId: consultarDespesaPorId
+      description: busca uma despesa pelo id
+    delete:
+      responses:
+        '202':
+          description: retorna 202 quando deletar a receita
+        '404':
+          $ref: '#/components/responses/Erro'
+      operationId: deletarDespesaPorId
+      description: deleta uma receita pelo id
+    patch:
+      requestBody:
+        description: dados da receita
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InputDespesaDTO'
+            examples:
+              atualizar_despesa:
+                value:
+                  valor: 1000.5
+                  descricao: Mercado - mesal
+                  pago: false
+                  categoria_transacao_id: 1
+                  mes_ano: 10/2021
+                  data: 15/10/2021
+        required: true
+      responses:
+        '202':
+          $ref: '#/components/responses/DespesaResponse'
+        '404':
+          $ref: '#/components/responses/Erro'
+      operationId: atualizarDespesaPorId
+      description: atualiza uma receita pelo id
+    parameters:
+      -
+        examples:
+          id da despesa:
+            value: '1'
+        name: id
+        description: identificador único da despesa
+        schema:
+          format: int64
+          type: integer
+        in: path
+        required: true
+      -
+        examples:
+          usuario:
+            value: '84457288063'
+        name: usuario
+        description: identificado única do usuário (CPF)
+        schema:
+          type: string
+        in: header
+        required: true
+components:
+  schemas:
+    InputCategoriaTransacaoDTO:
+      description: dados de entrada de uma categoria de transação
+      required:
+        - nome
+      type: object
+      properties:
+        nome:
+          description: nome da categoria da transação
+          type: string
+          example: Alimentação
+      example:
+        nome: Alimentação
+    OutputCategoriaTransacaoDTO:
+      title: Root Type for ConsultarCategoriaTransacao
+      description: dados de saída de uma categoria de transação
+      required:
+        - id
+        - nome
+        - dt_atualizacao
+      type: object
+      properties:
+        id:
+          format: int64
+          description: identificador único da categoria de transação
+          type: integer
+          example: '1'
+        nome:
+          description: nome da categoria de transação
+          type: string
+          example: Alimentação
+        dt_atualizacao:
+          description: data e hora da última atualização do registro
+          pattern: 'dd/MM/yyyy hh:mm:ss'
+          type: string
+          example: '01/10/2021 10:45:11'
+      example:
+        id: 1
+        nome: Alimentação
+        dt_atualizacao: '01/10/2021 10:45:11'
+    InputReceitaDTO:
+      title: Root Type for InputReceitaDTO
+      description: dados de entrada de uma receita
+      type: object
+      allOf:
+        -
+          type: object
+        -
+          $ref: '#/components/schemas/InputTransacaoDTO'
+      example:
+        valor: 15000.5
+        descricao: Salário
+        categoria_transacao_id: 1
+        mes_ano: 10/2021
+        data: 15/10/2021
+    OutputReceitaDTO:
+      title: Root Type for OutputReceitaDTO
+      description: dados de saída de uma receita
+      type: object
+      allOf:
+        -
+          required: []
+          type: object
+        -
+          $ref: '#/components/schemas/OutputTransacaoDTO'
+      example:
+        id: 1
+        valor: 15000.5
+        descricao: Salário
+        categoria_transacao_id: 1
+        mes_ano: 10/2021
+        data: 15/10/2021
+        dt_atualizacao: '01/10/2021 10:45:11'
+    InputDespesaDTO:
+      title: Root Type for InputReceitaDTO
+      description: dados de entrada de uma despesa
+      type: object
+      allOf:
+        -
+          required:
+            - pago
+          type: object
+          properties:
+            pago:
+              description: |
+                informa se a despesa já foi paga.
+              type: boolean
+              example: 'true'
+        -
+          $ref: '#/components/schemas/InputTransacaoDTO'
+      example:
+        valor: 1000.5
+        descricao: Mercado - mesal
+        pago: false
+        categoria_transacao_id: 1
+        mes_ano: 10/2021
+        data: 15/10/2021
+    OutputDespesaDTO:
+      title: Root Type for InputReceitaDTO
+      description: dados de saída de uma despesa
+      type: object
+      allOf:
+        -
+          type: object
+          properties:
+            pago:
+              description: informa se a despesa já foi paga
+              type: boolean
+              example: 'true'
+        -
+          $ref: '#/components/schemas/OutputTransacaoDTO'
+      example:
+        id: 1
+        valor: 150
+        descricao: Luz
+        categoria_transacao_id: 1
+        mes_ano: 10/2021
+        pago: false
+        data: 15/10/2021
+        dt_atualizacao: '01/10/2021 10:45:11'
+    InputTransacaoDTO:
+      title: Root Type for InputTransacaoDTO
+      description: 'dados de uma transacao (Input, Receita e Despesa)'
+      type: object
+      allOf:
+        -
+          type: object
+        -
+          $ref: '#/components/schemas/TransacaoDTO'
+      example:
+        valor: 15000.5
+        descricao: Salário
+        categoria_transacao_id: 1
+        mes_ano: 10/2021
+        data: 15/10/2021
+    OutputTransacaoDTO:
+      title: Root Type for OutputTransacaoDTO
+      description: 'dados de uma transacao (Output, Receita e Despesa)'
+      type: object
+      allOf:
+        -
+          type: object
+          properties:
+            id:
+              format: int64
+              description: identificador único da transação
+              minimum: 1
+              type: integer
+              example: '1'
+            dt_atualizacao:
+              description: data e hora da última atualização do registro
+              pattern: 'dd/MM/yyyy hh:mm:ss'
+              type: string
+              example: '01/10/2021 10:45:11'
+        -
+          $ref: '#/components/schemas/TransacaoDTO'
+      example:
+        id: 1
+        valor: 15000.5
+        descricao: Salário
+        categoria_transacao_id: 1
+        mes_ano: 10/2021
+        data: 15/10/2021
+        dt_atualizacao: '01/10/2021 10:45:11'
+    TransacaoDTO:
+      title: Root Type for TransacaoDTO
+      description: 'dados de uma transacao (Input e Output, Receita e Despesa)'
+      type: object
+      properties:
+        valor:
+          format: double
+          description: valor da transação
+          type: number
+          example: '15000.50'
+        descricao:
+          description: decrição da transação
+          maxLength: 100
+          minLength: 5
+          type: string
+          example: Salário
+        categoria_transacao_id:
+          format: int64
+          description: identificador único da categoria da transação
+          type: integer
+          example: '1'
+        data:
+          description: |-
+            data da transação.
+
+            Para transações de despesa, a data limite para pagar a despesa.
+
+            Para transações de receita, a data que receberá a receita.
+          pattern: dd/MM/yyyy
+          type: string
+          example: 15/10/2021
+        mes_ano:
+          description: mês e ano da transação
+          pattern: MM/yyyy
+          type: string
+          example: 10/2021
+    GeneralError:
+      title: Root Type for GeneralError
+      description: modelo padrão de erro
+      type: object
+      properties:
+        http_code:
+          format: int32
+          description: códgio http da exceção
+          type: integer
+          example: '404'
+        message:
+          description: mensagem explicativa da exceção
+          type: string
+          example: Receita não encontrada na base de dados
+        exception:
+          description: stack trace da exceção
+          type: string
+          example: >-
+            br.com.financa.transacao.aplication.exceptions.ReceitaNaoEncontradaException: Receita
+            não encontrada na base de dados\r\n\tat
+            br.com.financa.transacao.aplication.services.ReceitaService.buscarTransacaoPorId(ReceitaService.java:40)\r\n\tat
+            br.com.financa.transacao.adapter.in.controllers.ReceitaController.consultarReceitaPorId(ReceitaController.java:59)\r\n\tat
+            java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\r\n\tat
+            java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\r\n\tat
+            java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\r\n\tat
+            java.base/java.lang.reflect.Method.invoke(Method.java:566)\r\n\tat
+            org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:197)\r\n\tat
+            org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:141)\r\n\tat
+            org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:106)\r\n\tat
+            org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:895)\r\n\tat
+            org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:808)\r\n\tat
+            org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)\r\n\tat
+            org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1064)\r\n\tat
+            org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:963)\r\n\tat
+            org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1006)\r\n\tat
+            org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:898)\r\n\tat
+            javax.servlet.http.HttpServlet.service(HttpServlet.java:655)\r\n\tat
+            org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:883)\r\n\tat
+            javax.servlet.http.HttpServlet.service(HttpServlet.java:764)\r\n\tat
+            org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:227)\r\n\tat
+            org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)\r\n\tat
+            org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)\r\n\tat
+            org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)\r\n\tat
+            org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)\r\n\tat
+            org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:327)\r\n\tat
+            org.springframework.security.web.access.intercept.FilterSecurityInterceptor.invoke(FilterSecurityInterceptor.java:115)\r\n\tat
+            org.springframework.security.web.access.intercept.FilterSecurityInterceptor.doFilter(FilterSecurityInterceptor.java:81)\r\n\tat
+            org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)\r\n\tat
+            org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:121)\r\n\tat
+            org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:115)\r\n\tat
+            org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)\r\n\tat
+            org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:126)\r\n\tat
+            org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:81)\r\n\tat
+            org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)\r\n\tat
+            org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:105)\r\n\tat
+            org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)\r\n\tat
+            org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:149)\r\n\tat
+            org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)\r\n\tat
+            org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)\r\n\tat
+            org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)\r\n\tat
+            org.springframework.security.web.authentication.www.BasicAuthenticationFilter.doFilterInternal(BasicAuthenticationFilter.java:178)\r\n\tat
+            org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119)\r\n\tat
+            org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)\r\n\tat
+            org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:103)\r\n\tat
+            org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:89)\r\n\tat
+            org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)\r\n\tat
+            org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)\r\n\tat
+            org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)\r\n\tat
+            org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119)\r\n\tat
+            org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)\r\n\tat
+            org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:110)\r\n\tat
+            org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:80)\r\n\tat
+            org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)\r\n\tat
+            org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:55)\r\n\tat
+            org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119)\r\n\tat
+            org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)\r\n\tat
+            org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:211)\r\n\tat
+            org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:183)\r\n\tat
+            org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:358)\r\n\tat
+            org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:271)\r\n\tat
+            org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)\r\n\tat
+            org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)\r\n\tat
+            org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)\r\n\tat
+            org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119)\r\n\tat
+            org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)\r\n\tat
+            org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)\r\n\tat
+            org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)\r\n\tat
+            org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119)\r\n\tat
+            org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)\r\n\tat
+            org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)\r\n\tat
+            org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)\r\n\tat
+            org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119)\r\n\tat
+            org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)\r\n\tat
+            org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)\r\n\tat
+            org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:197)\r\n\tat
+            org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:97)\r\n\tat
+            org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:542)\r\n\tat
+            org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:135)\r\n\tat
+            org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92)\r\n\tat
+            org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:78)\r\n\tat
+            org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:357)\r\n\tat
+            org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:382)\r\n\tat
+            org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65)\r\n\tat
+            org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:893)\r\n\tat
+            org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1726)\r\n\tat
+            org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)\r\n\tat
+            org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)\r\n\tat
+            org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)\r\n\tat
+            org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)\r\n\tat
+            java.base/java.lang.Thread.run(Thread.java:834)\r\nCaused by:
+            javassist.NotFoundException: \r\n\tat
+            br.com.financa.transacao.aplication.exceptions.ReceitaNaoEncontradaException.<init>(ReceitaNaoEncontradaException.java:8)\r\n\t...
+            90 more\r\n
+      example:
+        http_code: 404
+        message: registro não encontrado
+        exception: stacktrace da exception...
+  responses:
+    CategoriaTransacaoResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OutputCategoriaTransacaoDTO'
+          examples:
+            categoria_transacao_response:
+              value:
+                id: 1
+                nome: Alimentação
+                dt_atualizacao: '01/10/2021 10:45:11'
+      description: dados da categoria da transacao
+    ListCategoriaTransacaoResponse:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/OutputCategoriaTransacaoDTO'
+          examples:
+            retorno_categorias_transacao:
+              value:
+                -
+                  id: 1
+                  nome: Alimentação
+                  dt_atualizacao: '01/10/2021 10:45:11'
+      description: ista de categorias da transacao
+    Erro:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GeneralError'
+          examples:
+            error:
+              value:
+                http_code: 404
+                message: registro não encontrado
+                exception: stacktrace da exception...
+      description: response padrão de erro
+    ReceitaResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OutputReceitaDTO'
+          examples:
+            receita_response:
+              value:
+                id: 1
+                valor: 15000.5
+                descricao: Salário
+                categoria_transacao_id: 1
+                mes_ano: 10/2021
+                data: 15/10/2021
+                dt_atualizacao: '01/10/2021 10:45:11'
+      description: dados da receita
+    ListReceitaResponse:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/OutputReceitaDTO'
+          examples:
+            list_receitas:
+              value:
+                -
+                  id: 1
+                  valor: 15000.5
+                  descricao: Salário
+                  categoria_transacao_id: 1
+                  mes_ano: 10/2021
+                  data: 15/10/2021
+                  dt_atualizacao: '01/10/2021 10:45:11'
+      description: lista de receitas
+    DespesaResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OutputDespesaDTO'
+          examples:
+            despesa_response:
+              value:
+                id: 1
+                valor: 150
+                descricao: Luz
+                categoria_transacao_id: 1
+                mes_ano: 10/2021
+                pago: false
+                data: 15/10/2021
+                dt_atualizacao: '01/10/2021 10:45:11'
+      description: dados da despesa
+    ListDespesaResponse:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/OutputDespesaDTO'
+          examples:
+            list_despesa_responde:
+              value:
+                -
+                  id: 1
+                  valor: 150
+                  descricao: Luz
+                  categoria_transacao_id: 1
+                  mes_ano: 10/2021
+                  pago: false
+                  data: 15/10/2021
+                  dt_atualizacao: '01/10/2021 10:45:11'
+      description: lista de despesas
+  securitySchemes:
+    basic_auth:
+      scheme: basic
+      type: http
+      description: autenticação via Basic Auth
+security:
+  -
+    basic_auth: []

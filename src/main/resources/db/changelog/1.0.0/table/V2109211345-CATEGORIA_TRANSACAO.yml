@@ -1,0 +1,38 @@
+databaseChangeLog:
+  - changeSet:
+      id: CREATE-TABLE-CATEGORIA_TRANSACAO
+      author: Alexandre Telles
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              tableName: CATEGORIA_TRANSACAO
+      changes:
+        - createTable:
+            tableName: CATEGORIA_TRANSACAO
+            columns:
+              - column:
+                  name: ID
+                  type: BIGINT
+                  autoIncrement: TRUE
+                  constraints:
+                    nullable: FALSE
+                    primaryKey: TRUE
+              - column:
+                  name: NOME
+                  type: VARCHAR(40)
+                  constraints:
+                    nullable: FALSE
+              - column:
+                  name: DT_ATUALIZACAO
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: FALSE
+              - column:
+                  name: USUARIO_CPF
+                  type: VARCHAR(11)
+                  constraints:
+                    nullable: FALSE
+                    foreignKeyName: FK_CATEGORIA_TRANSACAO-USUARIO_CPF
+                    references: USUARIO(CPF)

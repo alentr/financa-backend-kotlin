@@ -1,0 +1,52 @@
+databaseChangeLog:
+  - changeSet:
+      id: CREATE-TABLE-ORCAMENTO_MENSAL
+      author: Alexandre Telles
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              tableName: ORCAMENTO_MENSAL
+      changes:
+        - createTable:
+            tableName: ORCAMENTO_MENSAL
+            columns:
+              - column:
+                  name: ANO_MES
+                  type: INT(6)
+                  constraints:
+                    nullable: FALSE
+                    primaryKey: TRUE
+              - column:
+                  name: ABERTO
+                  type: TINYINT(1)
+                  constraints:
+                    nullable: FALSE
+              - column:
+                  name: TOTAL_RECEITA
+                  type: DECIMAL(17,2)
+                  constraints:
+                    nullable: TRUE
+              - column:
+                  name: TOTAL_DESPESA
+                  type: DECIMAL(17,2)
+                  constraints:
+                    nullable: TRUE
+              - column:
+                  name: SALDO_FINAL
+                  type: DECIMAL(17,2)
+                  constraints:
+                    nullable: TRUE
+              - column:
+                  name: DT_ATUALIZACAO
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: FALSE
+              - column:
+                  name: USUARIO_CPF
+                  type: VARCHAR(11)
+                  constraints:
+                    nullable: FALSE
+                    foreignKeyName: FK_ORCAMENTO_MENSAL-USUARIO_CPF
+                    references: USUARIO(CPF)

@@ -1,0 +1,52 @@
+databaseChangeLog:
+  - changeSet:
+      id: CREATE-TABLE-USUARIO
+      author: Alexandre Telles
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              tableName: USUARIO
+      changes:
+        - createTable:
+            tableName: USUARIO
+            columns:
+              - column:
+                  name: CPF
+                  type: VARCHAR(11)
+                  constraints:
+                    nullable: FALSE
+                    primaryKey: TRUE
+              - column:
+                  name: NOME
+                  type: VARCHAR(40)
+                  constraints:
+                    nullable: FALSE
+              - column:
+                  name: EMAIL
+                  type: VARCHAR(60)
+                  constraints:
+                    nullable: FALSE
+              - column:
+                  name: LOGIN
+                  type: VARCHAR(25)
+                  constraints:
+                    nullable: FALSE
+              - column:
+                  name: SENHA
+                  type: VARCHAR(65)
+                  constraints:
+                    nullable: FALSE
+              - column:
+                  name: DT_ATUALIZACAO
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: FALSE
+              - column:
+                  name: USUARIO_CPF
+                  type: VARCHAR(11)
+                  constraints:
+                    nullable: FALSE
+                    foreignKeyName: FK_USUARIO-USUARIO_CPF
+                    references: USUARIO(CPF)

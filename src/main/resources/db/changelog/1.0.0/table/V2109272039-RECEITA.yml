@@ -1,0 +1,63 @@
+databaseChangeLog:
+  - changeSet:
+      id: CREATE-TABLE-RECEITA
+      author: Alexandre Telles
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              tableName: RECEITA
+      changes:
+        - createTable:
+            tableName: RECEITA
+            columns:
+              - column:
+                  name: ID
+                  type: BIGINT
+                  autoIncrement: TRUE
+                  constraints:
+                    nullable: FALSE
+                    primaryKey: TRUE
+              - column:
+                  name: DT_RECEBIMENTO
+                  type: DATE
+                  constraints:
+                    nullable: TRUE
+              - column:
+                  name: ORCAMENTO_MENSAL_ANO_MES
+                  type: INT(6)
+                  constraints:
+                    nullable: FALSE
+                    primaryKey: TRUE
+                    foreignKeyName: FK_RECEITA-ORCAMENTO_MENSAL_ANO_MES
+                    references: ORCAMENTO_MENSAL(ANO_MES)
+              - column:
+                  name: VALOR
+                  type: DECIMAL(17,2)
+                  constraints:
+                    nullable: FALSE
+              - column:
+                  name: DESCRICAO
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: FALSE
+              - column:
+                  name: DT_ATUALIZACAO
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: FALSE
+              - column:
+                  name: CATEGORIA_TRANSACAO_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: FALSE
+                    foreignKeyName: FK_RECEITA-CATEGORIA_TRANSACAO_ID
+                    references: CATEGORIA_TRANSACAO(ID)
+              - column:
+                  name: USUARIO_CPF
+                  type: VARCHAR(11)
+                  constraints:
+                    nullable: FALSE
+                    foreignKeyName: FK_RECEITA-USUARIO_CPF
+                    references: USUARIO(CPF)

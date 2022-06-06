@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: INSERT-USUARIO
+      author: Alexandre Telles
+      changes:
+        - insert:
+            schemaName: FINANCA
+            tableName: USUARIO
+            columns:
+              - column:
+                  name: CPF
+                  value: '84457288063'
+              - column:
+                  name: NOME
+                  value: 'Alexandre Telles'
+              - column:
+                  name: EMAIL
+                  value: 'alexandre.ntr@gmail.com'
+              - column:
+                  name: LOGIN
+                  value: 'telles'
+              - column:
+                  name: SENHA
+                  value: '123456ab'
+              - column:
+                  name: USUARIO_CPF
+                  value: '84457288063'

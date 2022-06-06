@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - include:
+      file: db\changelog\1.0.0\table\V2109211325-USUARIO.yml
+  - include:
+      file: db\changelog\1.0.0\table\V2109272051-ORCAMENTO_MENSAL.yml
+  - include:
+      file: db\changelog\1.0.0\table\V2109211345-CATEGORIA_TRANSACAO.yml
+  - include:
+      file: db\changelog\1.0.0\table\V2109272039-RECEITA.yml
+  - include:
+      file: db\changelog\1.0.0\table\V2109272055-DESPESA.yml
+  - include:
+      file: db\changelog\1.0.0\insert\V2109211530-INSERT-USUARIO.yml
+  - include:
+      file: db\changelog\1.0.0\insert\V0606221020-INSERT-CATEGORIA_TRANSACAO.yml
