@@ -9,9 +9,9 @@ class CategoriaTransacao {
 
     var dtAtualizacao: LocalDateTime? = null
 
-    var usuarioCPF: String? = null
+    var usuarioCPF: String
 
-    constructor(id: Long, nome: String, dtAtualizacao: LocalDateTime?, usuarioCPF: String) {
+    constructor(id: Long?, nome: String?, dtAtualizacao: LocalDateTime?, usuarioCPF: String) {
         this.id = id
         this.nome = nome
         this.dtAtualizacao = dtAtualizacao

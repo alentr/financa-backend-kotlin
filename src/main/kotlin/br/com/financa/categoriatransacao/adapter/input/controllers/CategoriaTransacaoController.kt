@@ -1,7 +1,8 @@
 package br.com.financa.categoriatransacao.adapter.input.controllers
 
 import br.com.financa.categoriatransacao.adapter.input.controllers.dtos.OutputCategoriaTransacaoDTO
-import br.com.financa.categoriatransacao.application.ports.`in`.ICategoriaTransacaoPortIn
+import br.com.financa.categoriatransacao.adapter.output.toOutputCategoriaTransacaoDTO
+import br.com.financa.categoriatransacao.application.ports.input.ICategoriaTransacaoPortInput
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @Validated
 @RequestMapping("/gerenciamento/categoria-transacao")
-class CategoriaTransacaoController @Autowired constructor(private val categoriaTransacaoPortIn: ICategoriaTransacaoPortIn) {
+class CategoriaTransacaoController @Autowired constructor(private val categoriaTransacaoPortIn: ICategoriaTransacaoPortInput) {
 
     @GetMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
     fun consultarCategoriasTransacaoPorNome(
@@ -23,7 +24,9 @@ class CategoriaTransacaoController @Autowired constructor(private val categoriaT
         val response =
             categoriaTransacaoPortIn.consultarCategoriasTransacaoPorNome(usuario, nome)
 
-        return ResponseEntity.ok(listOf())
+        val responseDTO = response.map { it.toOutputCategoriaTransacaoDTO() }
+
+        return ResponseEntity.ok(responseDTO)
     }
 
 }
