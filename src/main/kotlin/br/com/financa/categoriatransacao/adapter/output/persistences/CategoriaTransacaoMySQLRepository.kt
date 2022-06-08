@@ -7,12 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
-class CategoriaTransacaoMySQLRepository @Autowired constructor(private val categoriaTransacaoRepository:
-                                                               ICategoriaTransacaoJPARepository) : ICategoriaTransacaoPortOutput {
+class CategoriaTransacaoMySQLRepository @Autowired constructor(
+    private val categoriaTransacaoRepository:
+    ICategoriaTransacaoJPARepository
+) : ICategoriaTransacaoPortOutput {
 
     override fun consultarCategoriasTransacaoPorNome(nome: String?): List<CategoriaTransacao>? {
 
-        val entities = categoriaTransacaoRepository.findByNome(nome)
+        val entities = categoriaTransacaoRepository.findByNomeContaining(nome ?: "")
 
         return entities.map { it.toCategoriaTransacao() }
     }

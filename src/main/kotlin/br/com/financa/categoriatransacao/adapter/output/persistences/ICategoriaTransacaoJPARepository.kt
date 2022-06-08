@@ -6,14 +6,5 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 
 interface ICategoriaTransacaoJPARepository: JpaRepository<CategoriaTransacaoEntity, Long> {
-
-    @Query(
-        "SELECT"
-        + "  C "
-        + "FROM"
-        + "  CATEGORIA_TRANSACAO C "
-        + "WHERE "
-        + "  :nome is null OR C.nome LIKE %:nome%"
-    )
-    fun findByNome(@Param("nome") nome: String?): List<CategoriaTransacaoEntity>
+    fun findByNomeContaining(@Param("nome") nome: String?): List<CategoriaTransacaoEntity>
 }

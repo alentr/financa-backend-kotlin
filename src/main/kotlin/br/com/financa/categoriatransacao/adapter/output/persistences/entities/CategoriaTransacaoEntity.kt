@@ -6,26 +6,19 @@ import javax.persistence.*
 
 @Entity(name = "CATEGORIA_TRANSACAO")
 @Table(name = "CATEGORIA_TRANSACAO")
-class CategoriaTransacaoEntity () {
+data class CategoriaTransacaoEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
-    var id: Long = 0
+    val id: Long = 0,
 
     @Column(name = "NOME")
-    var nome: String = ""
+    val nome: String = "",
 
     @Column(name = "USUARIO_CPF")
-    var usuarioCPF: String = ""
+    val usuarioCPF: String = "",
 
     @Column(name = "DT_ATUALIZACAO")
     @UpdateTimestamp
-    var dtAtualizacao: LocalDateTime = LocalDateTime.now()
-
-    constructor(id: Long, nome: String, usuarioCPF: String, dtAtualizacao: LocalDateTime) : this() {
-        this.id = id
-        this.nome = nome
-        this.usuarioCPF = usuarioCPF
-        this.dtAtualizacao = dtAtualizacao
-    }
-}
+    val dtAtualizacao: LocalDateTime = LocalDateTime.now()
+)
